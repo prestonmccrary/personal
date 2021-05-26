@@ -10,6 +10,9 @@ import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom'
 import { createBrowserHistory} from 'history'
 import pattern from './pattern.svg'
 
+import { use100vh } from 'react-div-100vh'
+
+
 const MenuIcon = ({w, h, color}) => {
   return(
     <svg style={{cursor: 'pointer'}} width={w} height={h} viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 3H3V1H1V3Z" fill={color}></path><path fill-rule="evenodd" clip-rule="evenodd" d="M1 9H3V7H1V9Z" fill={color}></path><path fill-rule="evenodd" clip-rule="evenodd" d="M1 15H3V13H1V15Z" fill={color}></path><path fill-rule="evenodd" clip-rule="evenodd" d="M7 3H9V1H7V3Z"fill={color}></path><path fill-rule="evenodd" clip-rule="evenodd" d="M13 3H15V1H13V3Z" fill={color}></path><path fill-rule="evenodd" clip-rule="evenodd" d="M7 9H9V7H7V9Z" fill={color}></path><path fill-rule="evenodd" clip-rule="evenodd" d="M13 9H15V7H13V9Z" fill={color}></path><path fill-rule="evenodd" clip-rule="evenodd" d="M7 15H9V13H7V15Z" fill={color}></path><path fill-rule="evenodd" clip-rule="evenodd" d="M13 15H15V13H13V15Z" fill={color}></path></svg>
@@ -51,14 +54,30 @@ const Hero = () => {
 
   const [mobile] = useMediaQuery("(max-width: 30em)")
 
+  const [text, setText] = useState(1)
 
+  const texts = [
+    "a full stack developer and product designer in the bay area.",
+    "a student studying EECS and Business at Berkeley MET.",
+  ]
+
+  useEffect(() => {
+    changeText()
+  }, [])
+
+  const changeText = () => {
+    
+    setText(a => (a+1) % (texts.length ) )
+
+    setTimeout(changeText, 7000)
+  }
 
 
   return(
     <Flex h="600px" marginBottom="inherit" w="100%" alignItems="center">
       <Box w={["95%","90%"]} maxWidth="850px">
         <Heading style={{wordSpacing: '3px'}} fontSize={["2xl","4xl"]}  fontWeight="light"> 
-          Hey, I'm Preston, <motion.span initial={{opacity: 0, y:100}} animate={{opacity: 1, y:0, transition: {duration: 1}}} >a student studying EECS and Business at Berkeley MET.</motion.span> 
+          Hey, I'm Preston, <motion.span key={text} initial={{opacity: 0, y:100}} animate={{opacity: 1, y:0, transition: {duration: 1.5, delay: 0.1}}} > {texts[text]}</motion.span> 
         </Heading>
         <Flex marginTop="6">
           <motion.div whileHover={{y: 3, transition: {type: 'spring'}}}>
@@ -194,10 +213,12 @@ function App() {
   const isDark = () => {
     return colorMode == 'dark'
   }
+  
 
+  const h = use100vh()
 
   return (
-    <Box overflow="hidden" minH="100vh" bg={isDark() ? "blackAlpha.800" : 'white'} w="100vw" position = "relative">
+    <Box overflow="hidden" minH={h} bg={isDark() ? "blackAlpha.800" : 'white'} w="100vw" position = "relative">
      
         <Pattern style={{position: 'absolute', bottom: '-200px', right: '-80px'}} color={isDark() ?'white' : "blackAlpha.800" } width="350" height="350"/>
         <Box paddingTop={["10","16"]} paddingBottom={["10","16"]}  w="85%" h="100%" margin="auto">
