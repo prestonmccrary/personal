@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import {Flex, Box, Text, useColorMode, Icon, Heading, Button, IconButton, AspectRatio, useMediaQuery} from '@chakra-ui/react'
+import {Flex, Box, Text, useColorMode, Icon, Heading, Button, IconButton, AspectRatio, useMediaQuery, HStack, Center} from '@chakra-ui/react'
 import {BiSun, BiMoon} from 'react-icons/bi'
 import {GoLightBulb, GoMarkGithub, GoLink} from 'react-icons/go'
-import {FiLink} from 'react-icons/fi'
+import {FiLink, FiSun} from 'react-icons/fi'
 import {DiReact, DiNodejsSmall, DiMongodb} from 'react-icons/di'
 
 import {motion} from 'framer-motion'
@@ -108,16 +108,21 @@ const Hero = () => {
   )
 }
 
-const ProjectItem = ({name, link, desc, isDark}) => {
+const ProjectItem = ({project, isDark}) => {
 
   return(
     <Box mb="24">
       <motion.div whileHover={{y: 3, transition: {type: 'spring'}}}>
         <AspectRatio w="100%" ratio={1.61}>
-          <Box _hover={{boxShadow: 'md'}} borderRadius="md" filter={isDark() && "brightness(1.15) grayscale(0.65)"} bg={`url(${url})`} bgSize="cover" padding="6">
+          {/* // */}
+          <Center  _hover={!isDark() && project.url && {boxShadow: 'md'}} borderRadius="md" filter={isDark() && project.url && "brightness(1.15) grayscale(0.65)" } bg={`url(${project.url})`} bgSize="cover" padding="6">
             {/* <Heading fontWeight="normal" color="white">HSE Apps</Heading> */}
+            {project.logo &&
+              
+              <img style={{height: '90%', filter: isDark() && 'invert(1) grayscale(1)'}} src={project.logo}/>
 
-          </Box>
+            }
+          </Center>
         </AspectRatio>
        
       </motion.div>
@@ -125,17 +130,29 @@ const ProjectItem = ({name, link, desc, isDark}) => {
       <Box marginTop="8" w="100%">
         <Flex w="100%" justifyContent="space-between" alignItems="center">
           <Heading style={{wordSpacing: '3px'}}  fontWeight="bold">
-            HSE Apps
+          {project.name}
           </Heading>
-          <Box>
-            <Icon fontSize="xl" mr="5" as={GoMarkGithub}/>
-            <Icon fontSize="xl" as={FiLink}/>
-          </Box>
+          <HStack>
+            {project.link &&
+              <motion.a whileHover={{y: -3}} target="_blank" href={project.link}>
+                <Icon fontSize="xl" as={FiLink}/>
+
+              </motion.a>
+            }
+            {project.gh &&
+              <a target="_blank" href={project.gh}>
+                <Icon fontSize="xl" as={GoMarkGithub}/>
+
+              </a>
+            }
+          </HStack>
 
 
         </Flex>
         
-        <Text fontSize={['sm', 'md']} marginTop="2" >Led a team of 13 in development of a district wide software ecoystem massing over 3400 users. Applications digitalized course selection, club management, peer tutoring, and daily bell schedules. </Text>
+        <Text fontSize={['sm', 'md']} marginTop="2" >
+          {project.desc}
+        </Text>
 
       </Box>
     </Box>
@@ -149,33 +166,92 @@ const Pattern = (props) => (
 </svg>
 )
 
-const url = "http://www.shielsexton.com/wp-content/uploads/2015/12/DSF9892-Edit.jpg"
+const url = ""
 
 const Projects = ({isDark}) => {
 
   const [cardBreak] = useMediaQuery("(min-width: 1050px)")
 
-   
+  const [selected,setSelected] = useState('Organizations')
+
+  const buttons = ['Organizations', 'Projects']
+  
+
+  const projects1 = [
+    {
+      name: "HSE Apps", 
+      desc: "Led a team of 13 in development of a district wide software ecoystem massing over 3400 users. Applications digitalized course selection, club management, peer tutoring, and daily bell schedules during the COVID-19 pandemic.", 
+      url: "http://www.shielsexton.com/wp-content/uploads/2015/12/DSF9892-Edit.jpg",
+      link: "https://hseapps.org"
+    },
+
+  ]
+
+  const projects2 = [
+    {
+      name: "Indiana Hax", 
+      desc: "Led a 6 man team in hosting three indianapolis based hackathons, recieved sponsorship from a local makerspace and hack club.", 
+      url: "https://upload.wikimedia.org/wikipedia/commons/9/95/Indianapolis-1872528.jpg",
+      link: "https://indianahax.org"
+    }
+  ]
+
+  const coding1 = [
+    {
+      name: "HSE Key", 
+      desc: "Single sign-on authentication and utility service built for the HSE Apps ecosystem. Written in JavaScript using Node and Express, and deployed through GCP with a GitHub Actions CI pipeline.", 
+      logo: "https://cdn.discordapp.com/attachments/626507510085320725/847956544473006121/thickerr.png",
+      gh: "https://github.com/hse-apps/hse-key"
+    },
+    {
+      name: "HSE Clubs", 
+      desc: "Student club management and discovery platform that implemented a large role-based authorization model, SMS announcements, and custom club membership policies. Built using the MERN stack and Twilio's SMS API, and then deployed through Netlify and GCP.", 
+      logo: "https://hseapps.org/static/media/Clubs.3abde7c3.png",
+      gh: "https://github.com/hse-apps/club-client",
+      link: "https://hseclubs.com"
+    }
+  ]
+
+  const coding2 = [
+    {
+      name: "HSE Tutoring", 
+      desc: "Real-time tutoring application that implemented both text and voice communications along with session history and reporting. Built using the MERN stack and Socket.io/Agora for real-time functionality, and then deployed through Netlify and GCP. ", 
+      logo: "https://hseapps.org/static/media/Tutoring.b38d3dfd.png",
+      gh: "https://github.com/hse-apps/tutoring-client",
+      link: "https://hsetutoring.com"
+    }
+  ]
+
+  const displayMap = {
+    'Projects': [coding1, coding2],
+    'Organizations': [projects1, projects2],
+    'Academic': []
+  }
+
+  
+
 
   return(
     <Box w='95%' maxWidth="1400px" margin="auto">
-    <Box textAlign="center" marginTop="20" marginBottom="20">
+    <Flex direction="column" alignItems="center" textAlign="center" marginTop="20" marginBottom="20">
       <Heading fontWeight="normal">My Work</Heading>
-    </Box>
+      <HStack marginTop="8" gridGap="4">
+        {buttons.map((a,i) => <Button _focus={{boxShadow: 'none'}} onClick={()=>setSelected(a)} variant={selected == a ? 'solid' : 'ghost'}>{a}</Button> )}
+      </HStack>
+    </Flex>
     <Flex w="100%" margin="0px auto" marginBottom="32" justifyContent={cardBreak ? "space-between" : "center"} direction='row'>
       {cardBreak ?
       <>
         <Flex w="47%" direction="column">
 
-        <ProjectItem isDark={isDark}/>
-        <ProjectItem isDark={isDark}/>
+        {displayMap[selected][0].map(p => <ProjectItem project={p} isDark={isDark}/>)}
 
         </Flex>
 
         <Flex w="47%" marginTop="60" direction="column">
 
-        <ProjectItem isDark={isDark}/>
-        <ProjectItem isDark={isDark}/>
+        {displayMap[selected][1].map(p => <ProjectItem project={p} isDark={isDark}/>)}
+
 
         </Flex>
       </>
@@ -184,10 +260,7 @@ const Projects = ({isDark}) => {
 
         <Flex w={['100%', '80%']} direction="column">
 
-        <ProjectItem isDark={isDark}/>
-        <ProjectItem isDark={isDark}/>
-        <ProjectItem isDark={isDark}/>
-        <ProjectItem isDark={isDark}/>
+        {coding1.concat(coding2).map(p => <ProjectItem project={p} isDark={isDark}/>)}
 
         </Flex>
 
