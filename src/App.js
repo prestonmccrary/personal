@@ -260,7 +260,7 @@ const Projects = ({isDark}) => {
 
         <Flex w={['100%', '80%']} direction="column">
 
-        {coding1.concat(coding2).map(p => <ProjectItem project={p} isDark={isDark}/>)}
+        {displayMap[selected][0].concat(displayMap[selected][1]).map(p => <ProjectItem project={p} isDark={isDark}/>)}
 
         </Flex>
 
