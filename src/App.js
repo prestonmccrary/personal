@@ -57,7 +57,7 @@ const Hero = () => {
   const [text, setText] = useState(1)
 
   const texts = [
-    "a full stack developer and product designer in the bay area.",
+    "a full stack developer and product designer in the Bay Area.",
     "a student studying EECS and Business at Berkeley MET.",
   ]
 
